@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sahayak</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="top">
+        <div class="brand">
+          <span class="mark" aria-hidden="true">स</span>
+          <div>
+            <h1>Sahayak</h1>
+            <p class="tagline">You stay in control</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <label class="lang" for="language">
+            <span class="sr-only">Response language</span>
+            <select id="language" title="Response language">
+              <option value="en">English</option>
+              <option value="hinglish">Hinglish</option>
+            </select>
+          </label>
+          <button type="button" id="open-settings" class="ghost">Settings</button>
+        </div>
+      </header>
+
+      <div id="banners" class="banners"></div>
+
+      <nav class="tabs" aria-label="Sahayak sections">
+        <button type="button" class="tab is-active" data-section="chat">Chat</button>
+        <button type="button" class="tab" data-section="summary">Summary</button>
+        <button type="button" class="tab" data-section="actions">Actions</button>
+        <button type="button" class="tab" data-section="capture">Screenshot</button>
+        <button type="button" class="tab" data-section="agent">Agent</button>
+        <button type="button" class="tab" data-section="skills">Skills</button>
+        <button type="button" class="tab" data-section="log">Log</button>
+        <button type="button" class="tab" data-section="profile">Profile</button>
+      </nav>
+
+      <main class="main">
+        <!-- CHAT & SELECTION SECTION -->
+        <section id="section-chat" class="section is-active">
+          <!-- Page Info Header Card -->
+          <div id="page-meta-container"></div>
+
+          <!-- Selection Action Card -->
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon sparkle-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+                </svg>
+                <span class="card-title">Explain Selection</span>
+              </div>
+              <span class="badge badge-accent">Flash-Lite</span>
+            </div>
+            <p class="card-desc">
+              Highlight any text, technical jargon, or complex passage on this webpage, then click below to get a clear explanation.
+            </p>
+            <div class="card-actions">
+              <button type="button" id="btn-explain-selection" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                <span>Explain selection</span>
+              </button>
+              <button type="button" id="btn-goto-summary" class="btn btn-secondary">
+                <span>Summarise article →</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Notification / Error Box -->
+          <div id="explain-notice" class="notice-box" hidden></div>
+
+          <!-- Result Pane -->
+          <div id="explain-result-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span class="result-title">Explanation</span>
+                <span id="explain-lang-badge" class="badge badge-subtle">English</span>
+                <span id="explain-heading-badge" class="badge badge-outline" hidden></span>
+              </div>
+              <button type="button" id="btn-close-result" class="icon-btn" title="Dismiss" aria-label="Dismiss">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Quote of selected text -->
+            <div class="quote-wrap">
+              <div class="quote-header">Selected text</div>
+              <blockquote id="explain-quote" class="selection-quote"></blockquote>
+              <div id="explain-truncate-notice" class="truncate-notice" hidden>
+                Note: Selection exceeded 8,000 characters; explained first 8,000.
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="explain-loading" class="loading-state" hidden>
+              <div class="spinner" aria-hidden="true"></div>
+              <span class="loading-text">Analyzing with Gemini Flash-Lite…</span>
+            </div>
+
+            <!-- Formatted Explanation Body -->
+            <div id="explain-output" class="markdown-body" aria-live="polite"></div>
+
+            <!-- Actions Footer -->
+            <div id="explain-actions" class="result-footer" hidden>
+              <button type="button" id="btn-copy-explanation" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-btn-text">Copy</span>
+              </button>
+              <button type="button" id="btn-toggle-explain-lang" class="btn btn-secondary">
+                <span id="lang-toggle-btn-text">Explain in Hinglish</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="thread" class="thread" aria-live="polite"></div>
+        </section>
+
+        <!-- SUMMARY SECTION (Slice 1.3) -->
+        <section id="section-summary" class="section">
+          <!-- Page Info Header Card in Summary -->
+          <div id="summary-page-meta-container"></div>
+
+          <!-- Summary Action Card -->
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon doc-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span id="summary-card-title" class="card-title">Article Summary</span>
+              </div>
+              <span id="summary-card-badge" class="badge badge-accent">Flash-Lite</span>
+            </div>
+            <p id="summary-card-desc" class="card-desc">
+              Extracts the main article text cleanly using Mozilla Readability (excluding navigation, ads, and footers) and generates a structured summary with TL;DR, 5 key points, and next steps.
+            </p>
+            <div class="card-actions">
+              <button type="button" id="btn-summarise-page" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <line x1="21" y1="10" x2="3" y2="10"></line>
+                  <line x1="21" y1="6" x2="3" y2="6"></line>
+                  <line x1="21" y1="14" x2="3" y2="14"></line>
+                  <line x1="21" y1="18" x2="7" y2="18"></line>
+                </svg>
+                <span id="btn-summarise-text">Summarise this page</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Summary Notice / Fallback Box -->
+          <div id="summary-notice" class="notice-box" hidden></div>
+
+          <!-- Summary Result Card -->
+          <div id="summary-result-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span class="result-title">Summary</span>
+                <span id="summary-lang-badge" class="badge badge-subtle">English</span>
+                <span id="summary-truncate-badge" class="badge badge-outline" hidden>Long article</span>
+              </div>
+              <button type="button" id="btn-close-summary" class="icon-btn" title="Dismiss" aria-label="Dismiss">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Article Details Header -->
+            <div id="summary-article-meta-box" class="article-meta-box">
+              <h2 id="summary-article-title" class="article-title"></h2>
+              <div id="summary-article-meta" class="article-submeta"></div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="summary-loading" class="loading-state" hidden>
+              <div class="spinner" aria-hidden="true"></div>
+              <span class="loading-text">Extracting article with Readability & generating summary…</span>
+            </div>
+
+            <!-- Formatted Summary Body -->
+            <div id="summary-output" class="markdown-body" aria-live="polite"></div>
+
+            <!-- Actions Footer -->
+            <div id="summary-actions" class="result-footer" hidden>
+              <button type="button" id="btn-copy-summary" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-summary-btn-text">Copy summary</span>
+              </button>
+              <button type="button" id="btn-toggle-summary-lang" class="btn btn-secondary">
+                <span id="lang-toggle-summary-btn-text">Summarise in Hinglish</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ACTIONS SECTION (Slice 2.2) -->
+        <section id="section-actions" class="section">
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+                <span class="card-title">Context actions</span>
+              </div>
+            </div>
+            <p class="card-desc">
+              Select text on a webpage, right-click, and pick Explain selection, Translate selection, or Draft a reply. The result lands here.
+            </p>
+          </div>
+
+          <div id="action-notice" class="notice-box" hidden></div>
+
+          <div id="action-result-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span id="action-result-title" class="result-title">Result</span>
+                <span id="action-result-badge" class="badge badge-subtle" hidden></span>
+              </div>
+              <button type="button" id="btn-close-action" class="icon-btn" title="Dismiss" aria-label="Dismiss">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="quote-wrap">
+              <div class="quote-header">Selected text</div>
+              <blockquote id="action-quote" class="selection-quote"></blockquote>
+              <div id="action-truncate-notice" class="truncate-notice" hidden>
+                Note: Selection exceeded 8,000 characters; used the first 8,000.
+              </div>
+            </div>
+
+            <div id="action-loading" class="loading-state" hidden>
+              <div class="spinner" aria-hidden="true"></div>
+              <span id="action-loading-text" class="loading-text">Working with Gemini…</span>
+            </div>
+
+            <div id="action-output" class="markdown-body" aria-live="polite"></div>
+
+            <div id="action-actions" class="result-footer" hidden>
+              <button type="button" id="btn-copy-action" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-action-btn-text">Copy</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCREENSHOT SECTION (Slice 2.3) -->
+        <section id="section-capture" class="section">
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span class="card-title">Screenshot &amp; ask</span>
+              </div>
+              <span class="badge badge-accent">Flash (vision)</span>
+            </div>
+            <p class="card-desc">
+              Capture the visible area of this tab, drag on the image to crop the part you care about, then ask a question. Best for charts, error dialogs, and forms that aren't in the article text.
+            </p>
+            <div class="card-actions">
+              <button type="button" id="btn-capture" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span id="btn-capture-text">Capture visible area</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="capture-notice" class="notice-box" hidden></div>
+
+          <div id="capture-stage-card" class="card" hidden>
+            <div class="capture-toolbar">
+              <span id="capture-dims" class="capture-dims"></span>
+              <button type="button" id="btn-capture-reset" class="btn btn-secondary">Reset crop</button>
+            </div>
+            <div id="capture-stage" class="capture-stage">
+              <div id="capture-image-wrap" class="capture-image-wrap">
+                <img id="capture-image" alt="Captured screenshot" />
+                <div id="crop-box" class="crop-box" hidden></div>
+              </div>
+            </div>
+            <p class="crop-hint" id="crop-hint">Drag on the image to crop. Leave it untouched to ask about the whole visible area.</p>
+            <label class="sr-only" for="screenshot-question">Your question</label>
+            <textarea
+              id="screenshot-question"
+              class="screenshot-question"
+              rows="2"
+              placeholder="Ask about this screenshot, e.g. What does this error mean?"
+            ></textarea>
+            <div class="capture-send-row">
+              <button type="button" id="btn-ask-screenshot" class="btn btn-primary" disabled>
+                <span>Ask about screenshot</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="screenshot-result-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span class="result-title">Answer</span>
+                <span id="screenshot-badge" class="badge badge-subtle">Flash (vision)</span>
+              </div>
+              <button type="button" id="btn-close-screenshot" class="icon-btn" title="Dismiss" aria-label="Dismiss">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="quote-wrap">
+              <div class="quote-header">Your question</div>
+              <blockquote id="screenshot-question-quote" class="selection-quote"></blockquote>
+            </div>
+
+            <div id="screenshot-loading" class="loading-state" hidden>
+              <div class="spinner" aria-hidden="true"></div>
+              <span class="loading-text">Analysing the screenshot with Gemini Flash…</span>
+            </div>
+
+            <div id="screenshot-output" class="markdown-body" aria-live="polite"></div>
+
+            <div id="screenshot-actions" class="result-footer" hidden>
+              <button type="button" id="btn-copy-screenshot" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-screenshot-btn-text">Copy</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- AGENT SECTION (Slice 3.1) -->
+        <section id="section-agent" class="section">
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                  <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                </svg>
+                <span class="card-title">Scan page</span>
+              </div>
+              <span id="agent-card-badge" class="badge badge-subtle">Step 1</span>
+            </div>
+            <p class="card-desc">
+              Numbers every button, link, and field Sahayak can act on. Nothing is clicked — badges are a map for you to review, and they follow the page as you scroll.
+            </p>
+            <div class="card-actions">
+              <button type="button" id="btn-scan-page" class="btn btn-primary" disabled>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span id="btn-scan-page-text">Scan page</span>
+              </button>
+              <button type="button" id="btn-clear-badges" class="btn btn-secondary">Clear badges</button>
+            </div>
+          </div>
+
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="card-title">Find it for me</span>
+              </div>
+              <span class="badge badge-subtle">Step 2</span>
+            </div>
+            <p class="card-desc">
+              Describe what you want in plain words and Sahayak rings the matching element. It only highlights — nothing is clicked or submitted.
+            </p>
+            <label class="sr-only" for="find-question">What should Sahayak find?</label>
+            <textarea
+              id="find-question"
+              class="screenshot-question"
+              rows="2"
+              placeholder="e.g. Where do I upload my resume?"
+            ></textarea>
+            <div class="capture-send-row">
+              <button type="button" id="btn-find-element" class="btn btn-primary" disabled>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span id="btn-find-element-text">Find it</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="find-notice" class="notice-box" hidden></div>
+
+          <div id="find-result-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span class="result-title">Match</span>
+                <span id="find-confidence-badge" class="badge badge-accent">high</span>
+                <span id="find-number-badge" class="badge badge-outline" hidden>#1</span>
+              </div>
+              <button type="button" id="btn-close-find" class="icon-btn" title="Dismiss" aria-label="Dismiss">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <p id="find-reason" class="card-desc"></p>
+            <p id="find-target" class="find-target"></p>
+            <p id="find-clarify-note" class="truncate-notice" hidden>
+              Sahayak was not sure. Try naming the exact label, field, or button text.
+            </p>
+          </div>
+
+          <div id="agent-notice" class="notice-box" hidden></div>
+
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"></path>
+                </svg>
+                <span class="card-title">Run an errand</span>
+              </div>
+              <span class="badge badge-subtle">Step 3</span>
+            </div>
+            <p class="card-desc">
+              Give Sahayak a goal. It proposes one action at a time and waits — nothing happens on the page until you approve each step. You can Skip or Stop at any point.
+            </p>
+            <label class="sr-only" for="agent-goal">What should Sahayak do?</label>
+            <textarea
+              id="agent-goal"
+              class="screenshot-question"
+              rows="2"
+              placeholder="e.g. Fill my name and email, then submit the form"
+            ></textarea>
+            <div class="agent-options-row">
+              <label class="agent-dry-run-label" for="agent-dry-run">
+                <input id="agent-dry-run" type="checkbox" />
+                <span>Dry-run (highlight only, no changes)</span>
+              </label>
+            </div>
+            <div class="capture-send-row">
+              <button type="button" id="btn-agent-start" class="btn btn-primary" disabled>
+                <span id="btn-agent-start-text">Start agent</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="agent-run-notice" class="notice-box" hidden></div>
+
+          <!-- Practice pages (Slice 3.5) -->
+          <div class="card action-card" id="practice-pages-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <polyline points="9 11 12 14 22 4"></polyline>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <span class="card-title">Practice pages</span>
+              </div>
+              <span class="badge badge-warn">Required this week</span>
+            </div>
+            <p class="card-desc">
+              The agent can only run on these practice pages right now. Open one in this window, then start the agent above.
+            </p>
+            <div class="card-actions" style="flex-direction:column;gap:8px;">
+              <button type="button" id="btn-open-form" class="btn btn-secondary" style="justify-content:flex-start;gap:10px;">
+                <span style="font-size:16px;">📝</span>
+                <span>Internship application form</span>
+              </button>
+              <button type="button" id="btn-open-shop" class="btn btn-secondary" style="justify-content:flex-start;gap:10px;">
+                <span style="font-size:16px;">🛒</span>
+                <span>Mini shop — search &amp; filter</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Owned origins (Slice 4.3) -->
+          <div class="card action-card" id="owned-origins-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span class="card-title">I own this page</span>
+              </div>
+              <span class="badge badge-subtle">Your sites only</span>
+            </div>
+            <p class="card-desc">
+              Mark a website you control so the agent can run on it. Only use this for pages you own or have permission to automate. Banking and payment pages stay blocked regardless.
+            </p>
+            <div class="card-actions">
+              <button type="button" id="btn-add-owned-origin" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span id="btn-add-owned-text">Allow this origin</span>
+              </button>
+            </div>
+            <!-- Current owned origins list -->
+            <div id="owned-origins-list" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;"></div>
+          </div>
+
+          <div id="agent-proposal-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span class="result-title">Next step</span>
+                <span id="agent-status-badge" class="badge badge-accent">waiting</span>
+                <span id="agent-step-badge" class="badge badge-outline">Step 1 / 20</span>
+                <span id="agent-dry-run-badge" class="badge badge-warn" hidden>Dry-run</span>
+              </div>
+              <button type="button" id="btn-close-agent-run" class="icon-btn" title="Hide" aria-label="Hide">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div id="agent-run-loading" class="loading-state" hidden>
+              <div class="spinner" aria-hidden="true"></div>
+              <span class="loading-text">Working out the next step…</span>
+            </div>
+
+            <div id="agent-proposal-body" hidden>
+              <p id="agent-proposal-sentence" class="proposal-sentence"></p>
+              <p id="agent-proposal-profile-note" class="profile-from-badge" hidden></p>
+              <p id="agent-proposal-reason" class="card-desc"></p>
+              <p id="agent-proposal-target" class="find-target" hidden></p>
+              <p id="agent-proposal-warn" class="truncate-notice" hidden></p>
+
+              <div class="result-footer agent-controls">
+                <button type="button" id="btn-agent-approve" class="btn btn-primary">Approve</button>
+                <button type="button" id="btn-agent-skip" class="btn btn-secondary">Skip</button>
+                <button type="button" id="btn-agent-stop" class="btn btn-danger">Stop</button>
+              </div>
+            </div>
+
+            <details id="agent-log-details" class="json-details">
+              <summary>Action log</summary>
+              <ol id="agent-log-list" class="node-list"></ol>
+            </details>
+          </div>
+
+          <div id="agent-result-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span class="result-title">Action map</span>
+                <span id="agent-scan-badge" class="badge badge-accent">Generation 1</span>
+                <span id="agent-truncate-badge" class="badge badge-outline" hidden>Capped</span>
+              </div>
+              <button type="button" id="btn-close-agent" class="icon-btn" title="Dismiss" aria-label="Dismiss">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <p id="agent-scan-summary" class="card-desc"></p>
+            <p id="agent-frames-note" class="truncate-notice" hidden>
+              This page embeds frames. Sahayak only numbers elements it can reach in the main document.
+            </p>
+
+            <div id="agent-loading" class="loading-state" hidden>
+              <div class="spinner" aria-hidden="true"></div>
+              <span class="loading-text">Scanning interactive elements…</span>
+            </div>
+
+            <ol id="agent-node-list" class="node-list"></ol>
+
+            <details id="agent-json-details" class="json-details">
+              <summary>Compact JSON sent to the model</summary>
+              <pre id="agent-json-preview" class="json-preview"></pre>
+            </details>
+
+            <div id="agent-actions" class="result-footer" hidden>
+              <button type="button" id="btn-copy-agent-json" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-agent-json-btn-text">Copy JSON</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SKILLS SECTION (Slice 4.2) -->
+        <section id="section-skills" class="section">
+
+          <!-- Header card -->
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span class="card-title">Skills</span>
+              </div>
+              <span class="badge badge-subtle">Local only</span>
+            </div>
+            <p class="card-desc">
+              One-click prompt recipes that run against the current page. Create your own or use the built-in starters.
+            </p>
+            <div class="card-actions">
+              <button type="button" id="btn-export-skills" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Export</span>
+              </button>
+              <label class="btn btn-secondary skill-import-label" title="Import skills from JSON file">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Import</span>
+                <input id="skills-file-input" type="file" accept=".json" class="sr-only" />
+              </label>
+            </div>
+          </div>
+
+          <div id="skills-notice" class="notice-box" hidden></div>
+
+          <!-- Skills list (rendered by JS) -->
+          <div id="skills-list"></div>
+
+          <!-- Add / Edit form -->
+          <div class="card action-card" id="skill-form-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span class="card-title" id="skill-form-title">New skill</span>
+              </div>
+            </div>
+
+            <form id="skill-form">
+              <input id="skill-edit-id" type="hidden" />
+
+              <div class="profile-field">
+                <label class="profile-label" for="skill-name">Name <span style="color:#dc2626">*</span></label>
+                <input id="skill-name" class="profile-input" type="text"
+                  placeholder="e.g. Exam notes" maxlength="60" required />
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="skill-description">Description</label>
+                <input id="skill-description" class="profile-input" type="text"
+                  placeholder="One-line description (optional)" maxlength="140" />
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="skill-kind">Kind</label>
+                <select id="skill-kind" class="profile-input">
+                  <option value="chat">Chat — ask a question about the page</option>
+                  <option value="summarise">Summarise — structured page summary</option>
+                  <option value="draft">Draft — reply to selected text</option>
+                </select>
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="skill-language">Output language</label>
+                <select id="skill-language" class="profile-input">
+                  <option value="en">English</option>
+                  <option value="hinglish">Hinglish</option>
+                </select>
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="skill-prompt">Prompt <span style="color:#dc2626">*</span></label>
+                <textarea id="skill-prompt" class="profile-input skill-prompt-textarea"
+                  placeholder="The instruction Sahayak will follow when you run this skill…"
+                  maxlength="2000" rows="4" required></textarea>
+                <p class="skill-char-count" id="skill-prompt-count">0 / 2000</p>
+              </div>
+
+              <div class="result-footer" style="margin-top:12px;gap:8px;">
+                <button type="submit" class="btn btn-primary" id="btn-save-skill">Save skill</button>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-skill">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Skill result pane -->
+          <div id="skill-result-pane" class="card result-card" hidden>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span id="skill-result-name" class="result-title">Skill result</span>
+                <span id="skill-result-kind-badge" class="badge badge-subtle">chat</span>
+              </div>
+              <button type="button" id="btn-close-skill-result" class="icon-btn" title="Dismiss" aria-label="Dismiss">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <div id="skill-result-loading" class="loading-state" hidden>
+              <div class="spinner" aria-hidden="true"></div>
+              <span class="loading-text">Running skill with Gemini…</span>
+            </div>
+            <div id="skill-result-output" class="markdown-body" aria-live="polite"></div>
+            <div id="skill-result-actions" class="result-footer" hidden>
+              <button type="button" id="btn-copy-skill-result" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span id="copy-skill-result-text">Copy</span>
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- LOG SECTION (Slice 3.4) -->
+        <section id="section-log" class="section">
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                <span class="card-title">Action log</span>
+              </div>
+              <span class="badge badge-subtle">Slice 3.4</span>
+            </div>
+            <p class="card-desc">
+              Every proposed step, its decision (Approved, Dry-run, Skipped, Blocked), and the reason the model gave. Preserved across service-worker sleep.
+            </p>
+          </div>
+          <div id="log-section-content">
+            <p class="lede">No agent steps have been taken yet. Run an errand on the Agent tab to see the action log here.</p>
+          </div>
+        </section>
+
+        <!-- PROFILE SECTION (Slice 4.1) -->
+        <section id="section-profile" class="section">
+          <!-- Summary card — shows current profile at a glance -->
+          <div class="card action-card" id="profile-summary-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="card-title" id="profile-display-name">My profile</span>
+              </div>
+              <span class="badge badge-subtle">Local only</span>
+            </div>
+            <div id="profile-summary-body">
+              <p class="lede">No profile saved yet. Fill in the form below and click Save.</p>
+            </div>
+          </div>
+
+          <div id="profile-notice" class="notice-box" hidden></div>
+
+          <!-- Inline edit form -->
+          <div class="card action-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                <span class="card-title">Edit profile</span>
+              </div>
+            </div>
+            <p class="card-desc">
+              Sahayak uses this to personalise draft replies, page chat, and to suggest values when filling forms. Everything stays on this device.
+            </p>
+
+            <form id="panel-profile-form">
+              <div class="profile-field">
+                <label class="profile-label" for="panel-profile-name">Name</label>
+                <input id="panel-profile-name" type="text" autocomplete="name"
+                  placeholder="e.g. Pravi Sharma" class="profile-input" />
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="panel-profile-college">College / University</label>
+                <input id="panel-profile-college" type="text" autocomplete="organization"
+                  placeholder="e.g. IIT Bombay" class="profile-input" />
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="panel-profile-skills">Skills</label>
+                <input id="panel-profile-skills" type="text"
+                  placeholder="e.g. React, Python, ML" class="profile-input" />
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="panel-profile-links">Portfolio / LinkedIn</label>
+                <input id="panel-profile-links" type="text" autocomplete="url"
+                  placeholder="e.g. https://linkedin.com/in/pravi" class="profile-input" />
+              </div>
+
+              <div class="profile-field">
+                <label class="profile-label" for="panel-profile-tone">Draft tone</label>
+                <select id="panel-profile-tone" class="profile-input">
+                  <option value="friendly and polite">Friendly and polite</option>
+                  <option value="professional">Professional</option>
+                  <option value="concise">Concise</option>
+                  <option value="enthusiastic">Enthusiastic</option>
+                  <option value="formal">Formal</option>
+                </select>
+              </div>
+
+              <div class="result-footer" style="margin-top:12px;">
+                <button type="submit" class="btn btn-primary" id="btn-save-profile">Save profile</button>
+                <button type="button" class="btn btn-secondary" id="btn-clear-profile">Clear</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer id="composer-wrap" class="composer-wrap">
+        <form id="composer" class="composer">
+          <label class="sr-only" for="prompt">Message</label>
+          <textarea
+            id="prompt"
+            rows="2"
+            placeholder="Ask a question about this page…"
+          ></textarea>
+          <button type="submit" id="send">Send</button>
+        </form>
+      </footer>
+    </div>
+    <script src="panel.js" type="module"></script>
+  </body>
+</html>

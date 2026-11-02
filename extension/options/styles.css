@@ -1,0 +1,114 @@
+:root {
+  color-scheme: light;
+  --bg: #f4efe6;
+  --ink: #1c1914;
+  --muted: #5c564c;
+  --line: #d9d0c0;
+  --accent: #0f6e5a;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  display: grid;
+  place-items: start center;
+  padding: 32px 16px;
+}
+
+.card {
+  width: min(520px, 100%);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.intro,
+.hint {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin: 16px 0 6px;
+}
+
+input,
+select {
+  width: 100%;
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+button {
+  font: inherit;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.secondary {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.status {
+  font-size: 14px;
+  margin: 12px 0 0;
+}
+
+.feedback {
+  font-size: 14px;
+  margin: 8px 0 0;
+}
+
+.feedback.ok {
+  color: var(--accent);
+}
+
+.feedback.err {
+  color: #7a2416;
+}
+
+/* ── Profile section (Slice 4.1) ── */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 28px 0 20px;
+}
+
+.section-heading {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}

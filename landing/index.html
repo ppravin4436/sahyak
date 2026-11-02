@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Sahayak — a Chrome side-panel AI agent that reads the current page and acts only after you approve. Free, local, and user-controlled." />
+  <title>Sahayak — Your AI Browser Copilot</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Open Graph -->
+  <meta property="og:title"       content="Sahayak — Your AI Browser Copilot" />
+  <meta property="og:description" content="Chrome extension that reads the current page, proposes actions, and executes only after you approve." />
+  <meta property="og:type"        content="website" />
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-brand">
+      <span class="nav-mark" aria-hidden="true">स</span>
+      Sahayak
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#safety">Safety</a></li>
+      <li><a href="#install">Install</a></li>
+      <li><a href="https://github.com/YOUR_USERNAME/sahayak" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+    <a href="https://github.com/YOUR_USERNAME/sahayak/releases/latest"
+       class="btn btn-primary" target="_blank" rel="noopener">
+      Download free
+    </a>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <span class="badge badge-teal">Free Chrome Extension · MV3</span>
+    </div>
+
+    <h1>
+      Read. Reason. Act.<br>
+      <span class="accent">You stay in control.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Sahayak sits in your Chrome side panel, reads the current page,
+      and helps you summarise, chat, explain, and act — one approved step at a time.
+      No autonomous runs. No data sent to blocked pages. No passwords touched.
+    </p>
+
+    <div class="hero-cta">
+      <a href="https://github.com/YOUR_USERNAME/sahayak/releases/latest"
+         class="btn btn-primary" target="_blank" rel="noopener">
+        ⬇ Download ZIP
+      </a>
+      <a href="https://github.com/YOUR_USERNAME/sahayak"
+         class="btn btn-secondary" target="_blank" rel="noopener">
+        View on GitHub
+      </a>
+    </div>
+    <p class="hero-note">Load unpacked · Chrome 116+ · Free Gemini API key</p>
+
+    <!-- Panel mockup -->
+    <div class="hero-visual">
+      <div class="panel-mockup" role="img" aria-label="Sahayak side panel preview">
+        <div class="panel-topbar">
+          <div class="panel-topbar-brand">
+            <span class="panel-topbar-mark">स</span>
+            Sahayak
+          </div>
+          <span class="panel-topbar-tag">You stay in control</span>
+        </div>
+        <div class="panel-tabs">
+          <div class="panel-tab active">Chat</div>
+          <div class="panel-tab">Summary</div>
+          <div class="panel-tab">Agent</div>
+          <div class="panel-tab">Skills</div>
+          <div class="panel-tab">Log</div>
+        </div>
+        <div class="panel-body">
+          <div class="panel-card">
+            <div class="panel-card-title">📌 TL;DR</div>
+            <div class="panel-line long"></div>
+            <div class="panel-line medium"></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">🔑 Key points</div>
+            <div class="panel-line accent"></div>
+            <div class="panel-line short" style="margin-top:4px"></div>
+            <div class="panel-line long" style="margin-top:4px"></div>
+            <div class="panel-line medium" style="margin-top:4px"></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">🎯 What to do next</div>
+            <div class="panel-line medium"></div>
+            <div class="panel-btn-row">
+              <div class="panel-btn"></div>
+              <div class="panel-btn outline"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ─────────────────────────────────────────────────────────── -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-header">
+      <span class="badge badge-teal">Features</span>
+      <h2>Everything you need, nothing you don't</h2>
+      <p>A full AI reading and acting assistant — all running inside your browser with your own API key.</p>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Article &amp; YouTube summaries</h3>
+        <p>Structured TL;DR, five key points, and next steps — for any article or public YouTube video. Timestamps are clickable.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Grounded page chat</h3>
+        <p>Ask anything about the current page. Sahayak answers only from the page text and says so when the answer isn't there.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3>Explain, Translate, Draft</h3>
+        <p>Right-click any selected text to explain jargon, translate into Hindi or Hinglish, or draft a ready-to-send reply.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📸</div>
+        <h3>Screenshot and ask</h3>
+        <p>Capture the visible area, crop to the chart or error dialog that matters, and ask Gemini Flash a question about it.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔢</div>
+        <h3>Interactive element map</h3>
+        <p>Scans every button, link, input, and dropdown on the page and overlays numbered badges so the agent can reason over them.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Find it for me</h3>
+        <p>Describe what you're looking for in plain words. Sahayak rings the matching element — without clicking it.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>One-step agent loop</h3>
+        <p>Give Sahayak a goal. It proposes one action at a time and waits. Approve, Skip, or Stop — you're always in charge.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>One-click skills</h3>
+        <p>Save reusable prompt recipes — exam notes, Hinglish explainer, polite reply, form filler. Export and import as JSON.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👤</div>
+        <h3>Local profile memory</h3>
+        <p>Store your name, college, skills, and links locally. Sahayak uses them to personalise drafts and suggest form values.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>English &amp; Hinglish</h3>
+        <p>Switch output language in the header. Every feature — summaries, chat, explanations — responds in your chosen language.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Free-tier resilience</h3>
+        <p>Defaults to Gemini Flash-Lite. Backs off and retries on 429. Falls back to Groq text when Gemini is busy.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Safety in code</h3>
+        <p>Banking pages, password fields, OTP inputs, and card fields are blocked by deterministic code — not just model instructions.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── How it works ──────────────────────────────────────────────────────── -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="section-header">
+      <span class="badge badge-teal">How it works</span>
+      <h2>Get started in four steps</h2>
+      <p>No cloud account, no subscription. Just Chrome and a free API key.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <h3>Download the ZIP</h3>
+        <p>Grab the latest release from GitHub Releases and unzip it anywhere on your machine.</p>
+      </div>
+      <div class="step">
+        <h3>Load unpacked</h3>
+        <p>Open <code>chrome://extensions</code>, enable Developer mode, and click Load unpacked → select the <code>extension/</code> folder.</p>
+      </div>
+      <div class="step">
+        <h3>Add your API key</h3>
+        <p>Get a free Gemini key from Google AI Studio and paste it into Sahayak Settings. Your key never leaves the device.</p>
+      </div>
+      <div class="step">
+        <h3>Open the side panel</h3>
+        <p>Pin Sahayak, navigate to any article or practice page, and open the side panel to start summarising, chatting, and acting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Safety ───────────────────────────────────────────────────────────── -->
+<section class="safety" id="safety">
+  <div class="container">
+    <div class="safety-grid">
+      <div class="safety-content">
+        <span class="badge badge-teal">Safety first</span>
+        <h2>Deterministic rules, not model prompts</h2>
+        <p>
+          Every safety restriction is enforced by extension code that runs before any model call
+          and before any DOM write. Prompts may repeat the rules, but code is the control.
+        </p>
+        <ul class="safety-list">
+          <li>Password, OTP, CVV, and card fields blocked in executor before DOM write</li>
+          <li>Banking, UPI, and payment pages blocked before capture or model send</li>
+          <li>Agent restricted to practice pages or origins you explicitly own</li>
+          <li>Consequential actions (Submit, Pay, Send) need a second tap</li>
+          <li>Stop button always visible and always works</li>
+          <li>API keys stored locally; never committed to git</li>
+          <li>Profile and skills stay on-device; never synced</li>
+          <li>In-flight model results ignored after Stop</li>
+        </ul>
+      </div>
+      <div>
+        <div class="never-list">
+          <h3>Sahayak will never</h3>
+          <ul>
+            <li>Type into a password or OTP field</li>
+            <li>Enter card numbers or UPI PINs</li>
+            <li>Automate login flows</li>
+            <li>Act on banking or payment pages</li>
+            <li>Send private pages to an external model</li>
+            <li>Run autonomously without approval</li>
+            <li>Commit API keys to the repository</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stack ────────────────────────────────────────────────────────────── -->
+<section class="stack">
+  <div class="container">
+    <div class="stack-header">
+      <h2>Built with free, open tools</h2>
+      <p>No cloud backend. No subscription. No telemetry.</p>
+    </div>
+    <div class="stack-pills">
+      <span class="stack-pill">Chrome MV3</span>
+      <span class="stack-pill">Side Panel API</span>
+      <span class="stack-pill">Gemini Flash-Lite</span>
+      <span class="stack-pill">Gemini Flash (vision)</span>
+      <span class="stack-pill">Groq fallback</span>
+      <span class="stack-pill">Mozilla Readability</span>
+      <span class="stack-pill">Vanilla JS ES modules</span>
+      <span class="stack-pill">Shadow DOM overlay</span>
+      <span class="stack-pill">chrome.storage.local</span>
+      <span class="stack-pill">chrome.storage.session</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Install CTA ───────────────────────────────────────────────────────── -->
+<section class="install" id="install">
+  <div class="container">
+    <h2>Install Sahayak in 60 seconds</h2>
+    <p>Download the ZIP, load it unpacked, add your free Gemini key, and start using it right away.</p>
+
+    <div class="install-steps">
+      <span class="install-step">1 · Download ZIP</span>
+      <span class="install-arrow">→</span>
+      <span class="install-step">2 · Load unpacked</span>
+      <span class="install-arrow">→</span>
+      <span class="install-step">3 · Paste API key</span>
+      <span class="install-arrow">→</span>
+      <span class="install-step">4 · Open side panel</span>
+    </div>
+
+    <a href="https://github.com/YOUR_USERNAME/sahayak/releases/latest"
+       class="btn btn-primary" target="_blank" rel="noopener">
+      ⬇ Download latest release
+    </a>
+
+    <p class="install-note">
+      Requires Chrome 116+ on desktop ·
+      <a href="https://github.com/YOUR_USERNAME/sahayak" style="color:rgba(255,255,255,.85)">View source on GitHub ↗</a>
+    </p>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <p>
+      <strong>Sahayak</strong> — "helper" in Hindi.
+      Built with ♥ as a four-week cohort project.
+      <a href="https://github.com/YOUR_USERNAME/sahayak" target="_blank" rel="noopener">GitHub</a>
+      ·
+      <a href="https://github.com/YOUR_USERNAME/sahayak/blob/main/README.md" target="_blank" rel="noopener">README</a>
+      ·
+      <a href="https://github.com/YOUR_USERNAME/sahayak/releases" target="_blank" rel="noopener">Releases</a>
+    </p>
+    <p style="margin-top:8px">
+      Free to use. API keys stay on your device. No analytics, no tracking.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

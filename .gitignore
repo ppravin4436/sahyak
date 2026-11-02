@@ -1,0 +1,19 @@
+.env
+.env.*
+*.pem
+**/secrets*
+**/*secret*
+**/credentials*.json
+Thumbs.db
+Desktop.ini
+.DS_Store
+node_modules/
+*.log
+
+# Release artefacts — never commit built ZIPs or packaged extensions
+extension.zip
+sahayak.zip
+sahayak-*.zip
+dist/
+*.crx
+*.nupkg

@@ -1,0 +1,56 @@
+{
+  "manifest_version": 3,
+  "name": "Sahayak",
+  "version": "1.0.0",
+  "description": "A user-controlled Chrome side-panel agent that reads the current page and acts only after you approve.",
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_title": "Open Sahayak",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/sw.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/index.html"
+  },
+  "options_ui": {
+    "page": "options/index.html",
+    "open_in_tab": true
+  },
+  "permissions": ["sidePanel", "storage", "scripting", "activeTab", "tabs", "contextMenus"],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["test-pages/form.html", "test-pages/shop.html"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "lib/Readability.js",
+        "content/reader.js",
+        "content/overlay.js",
+        "content/scanner.js",
+        "content/executor.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "minimum_chrome_version": "116"
+}

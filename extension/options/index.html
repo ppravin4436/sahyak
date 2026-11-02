@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sahayak Settings</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <h1>Sahayak settings</h1>
+      <p class="intro">
+        Your Gemini API key stays on this device in Chrome local storage. It is never written into
+        the extension source.
+      </p>
+
+      <p id="status" class="status" role="status"></p>
+      <p id="feedback" class="feedback" hidden></p>
+
+      <form id="key-form">
+        <label for="gemini-key">Gemini API key</label>
+        <input
+          id="gemini-key"
+          name="geminiKey"
+          type="password"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Paste a new key to replace the saved one"
+        />
+        <p class="hint">Leave blank if you only want to review status or update language. Empty or whitespace-only keys are rejected.</p>
+
+        <label for="groq-key">Groq API key (Optional Fallback)</label>
+        <input
+          id="groq-key"
+          name="groqKey"
+          type="password"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Paste a Groq key for text fallback"
+        />
+        <p class="hint">Used only as a fallback for text tasks if Gemini fails. Leave blank to skip fallback.</p>
+
+        <label for="preferred-language">Default output language</label>
+        <select id="preferred-language" name="preferredLanguage">
+          <option value="en">English</option>
+          <option value="hinglish">Hinglish</option>
+        </select>
+        <p class="hint">Controls the language Sahayak uses for Explanations and Summaries.</p>
+
+        <label for="translate-target">Translate target</label>
+        <select id="translate-target" name="translateTarget">
+          <option value="hi">Hindi (हिंदी - Devanagari)</option>
+          <option value="hinglish">Hinglish (Latin script)</option>
+          <option value="en">English</option>
+        </select>
+        <p class="hint">Target language for translation actions (distinguished from conversational output language).</p>
+
+        <label for="max-steps">Agent max steps</label>
+        <input
+          id="max-steps"
+          name="maxSteps"
+          type="number"
+          min="1"
+          max="50"
+          value="20"
+          style="width:80px"
+        />
+        <p class="hint">Maximum number of steps the agent will propose in one run (1–50). Default is 20.</p>
+
+        <div class="checkbox-row" style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <input id="dry-run-default" name="dryRunDefault" type="checkbox" />
+          <label for="dry-run-default" style="margin:0;font-weight:500;">Dry-run mode by default</label>
+        </div>
+        <p class="hint">When enabled, agent approvals only highlight the element — no DOM changes happen. Good for testing.</p>
+
+        <div class="actions">
+          <button type="submit">Save settings</button>
+          <button type="button" id="clear-key" class="secondary">Clear key</button>
+        </div>
+      </form>
+
+      <!-- ── Profile section (Slice 4.1) ── -->
+      <hr class="section-divider" />
+
+      <h2 class="section-heading">Local profile</h2>
+      <p class="intro">
+        Sahayak uses these details to personalise Draft replies and pre-fill forms.
+        Everything stays on this device — nothing is synced or sent to any server.
+      </p>
+
+      <p id="profile-feedback" class="feedback" hidden></p>
+
+      <form id="profile-form">
+        <label for="profile-name">Your name</label>
+        <input
+          id="profile-name"
+          name="profileName"
+          type="text"
+          autocomplete="name"
+          spellcheck="false"
+          placeholder="e.g. Pravi Sharma"
+        />
+        <p class="hint">Used in Draft replies and as a suggested value when the agent fills your name on a form.</p>
+
+        <label for="profile-college">College / University</label>
+        <input
+          id="profile-college"
+          name="profileCollege"
+          type="text"
+          autocomplete="organization"
+          spellcheck="false"
+          placeholder="e.g. IIT Bombay"
+        />
+        <p class="hint">Suggested when the agent fills a college or institution field on a form.</p>
+
+        <label for="profile-skills">Skills (comma-separated)</label>
+        <input
+          id="profile-skills"
+          name="profileSkills"
+          type="text"
+          spellcheck="false"
+          placeholder="e.g. React, Python, Machine Learning"
+        />
+        <p class="hint">Used in Draft replies and agent form-fill suggestions for skills / expertise fields.</p>
+
+        <label for="profile-links">Portfolio / LinkedIn URL(s)</label>
+        <input
+          id="profile-links"
+          name="profileLinks"
+          type="text"
+          autocomplete="url"
+          spellcheck="false"
+          placeholder="e.g. https://linkedin.com/in/pravi"
+        />
+        <p class="hint">Suggested when the agent fills a portfolio or LinkedIn URL field on a form.</p>
+
+        <label for="profile-tone">Preferred draft tone</label>
+        <select id="profile-tone" name="profileTone">
+          <option value="friendly and polite">Friendly and polite (default)</option>
+          <option value="professional">Professional</option>
+          <option value="concise">Concise</option>
+          <option value="enthusiastic">Enthusiastic</option>
+          <option value="formal">Formal</option>
+        </select>
+        <p class="hint">Default tone used for Draft a reply. You can override this per-action in the panel.</p>
+
+        <div class="actions">
+          <button type="submit" id="save-profile">Save profile</button>
+          <button type="button" id="clear-profile" class="secondary">Clear profile</button>
+        </div>
+      </form>
+    </main>
+    <script src="options.js" type="module"></script>
+  </body>
+</html>

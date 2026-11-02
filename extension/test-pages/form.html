@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahayak Practice — Internship Application Form</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #0f766e;
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header h1 { margin: 0; font-size: 18px; font-weight: 700; }
+    header p  { margin: 0; font-size: 12px; opacity: .75; }
+
+    .container {
+      max-width: 680px;
+      margin: 32px auto;
+      padding: 0 16px 48px;
+    }
+
+    /* Step indicator */
+    .steps {
+      display: flex;
+      gap: 0;
+      margin-bottom: 28px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #d1d5db;
+    }
+    .step {
+      flex: 1;
+      padding: 10px 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      background: #fff;
+      color: #6b7280;
+      border-right: 1px solid #d1d5db;
+      cursor: default;
+    }
+    .step:last-child { border-right: none; }
+    .step.active   { background: #0f766e; color: #fff; }
+    .step.done     { background: #d1fae5; color: #065f46; }
+
+    /* Card */
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .card h2 { margin: 0 0 6px; font-size: 18px; }
+    .card .subtitle { margin: 0 0 24px; color: #6b7280; font-size: 14px; }
+
+    /* Form fields */
+    .field { margin-bottom: 18px; }
+    label  { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+    label .req { color: #dc2626; margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #111;
+      background: #fff;
+      outline: none;
+      transition: border-color .15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15,118,110,.12);
+    }
+    textarea { resize: vertical; min-height: 90px; }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .hint { margin: 4px 0 0; font-size: 12px; color: #6b7280; }
+
+    input[type="file"] {
+      padding: 7px 10px;
+      background: #f9fafb;
+      cursor: pointer;
+    }
+
+    /* Checkbox / radio group */
+    .check-group { display: flex; flex-direction: column; gap: 8px; }
+    .check-row   { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    .check-row input { width: auto; }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    button {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity .15s;
+    }
+    button:hover { opacity: .88; }
+    .btn-primary   { background: #0f766e; color: #fff; }
+    .btn-secondary { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+    .btn-submit    { background: #059669; color: #fff; }
+
+    /* Hidden steps */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Success */
+    #success {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    #success .checkmark {
+      font-size: 56px;
+      margin-bottom: 12px;
+    }
+    #success h2 { margin: 0 0 8px; font-size: 22px; color: #065f46; }
+    #success p  { color: #374151; margin: 0 0 20px; font-size: 14px; }
+    .btn-reset { background: #0f766e; color: #fff; }
+
+    /* Field summary on review */
+    .summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .summary-table th, .summary-table td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .summary-table th { color: #6b7280; font-weight: 600; width: 38%; }
+    .summary-table td { color: #111; font-weight: 400; }
+
+    /* Notice banner for Sahayak */
+    .practice-banner {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #92400e;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>TechBridge Internship — Application Form</h1>
+    <p>Sahayak Practice Page · Errand 1 · Multi-step form</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="practice-banner">
+    🤖 <strong>Sahayak practice page.</strong> Open the side panel, go to the Agent tab, type a goal like
+    <em>"Fill in the form with dummy data and submit"</em>, and approve each step.
+  </div>
+
+  <div class="steps">
+    <div class="step active" id="step-dot-1">1 · Personal</div>
+    <div class="step"        id="step-dot-2">2 · Education</div>
+    <div class="step"        id="step-dot-3">3 · Role</div>
+    <div class="step"        id="step-dot-4">4 · Review</div>
+  </div>
+
+  <div class="card">
+
+    <!-- ── PAGE 1: Personal details ── -->
+    <div class="page active" id="page-1">
+      <h2>Personal details</h2>
+      <p class="subtitle">Step 1 of 3 — tell us about yourself.</p>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="first-name">First name <span class="req">*</span></label>
+          <input id="first-name" name="firstName" type="text" placeholder="Arjun" autocomplete="given-name" />
+        </div>
+        <div class="field">
+          <label for="last-name">Last name <span class="req">*</span></label>
+          <input id="last-name" name="lastName" type="text" placeholder="Sharma" autocomplete="family-name" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email">Email address <span class="req">*</span></label>
+        <input id="email" name="email" type="email" placeholder="arjun@example.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone number</label>
+        <input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" autocomplete="tel" />
+      </div>
+
+      <div class="field">
+        <label for="linkedin">LinkedIn profile URL</label>
+        <input id="linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/arjun-sharma" />
+      </div>
+
+      <div class="field">
+        <label for="city">City</label>
+        <input id="city" name="city" type="text" placeholder="Bengaluru" autocomplete="address-level2" />
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" id="next-1" type="button">Next: Education →</button>
+      </div>
+    </div>
+
+    <!-- ── PAGE 2: Education ── -->
+    <div class="page" id="page-2">
+      <h2>Education</h2>
+      <p class="subtitle">Step 2 of 3 — your academic background.</p>
+
+      <div class="field">
+        <label for="college">College / University <span class="req">*</span></label>
+        <input id="college" name="college" type="text" placeholder="IIT Bombay" />
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="degree">Degree</label>
+          <select id="degree" name="degree">
+            <option value="">Select degree…</option>
+            <option value="btech">B.Tech / B.E.</option>
+            <option value="bsc">B.Sc</option>
+            <option value="bca">BCA</option>
+            <option value="mtech">M.Tech / M.E.</option>
+            <option value="msc">M.Sc</option>
+            <option value="mba">MBA</option>
+            <option value="phd">Ph.D</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="grad-year">Expected graduation year</label>
+          <input id="grad-year" name="gradYear" type="number" min="2024" max="2030" placeholder="2026" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="gpa">CGPA / Percentage</label>
+        <input id="gpa" name="gpa" type="text" placeholder="8.4 / 10 or 84%" />
+      </div>
+
+      <div class="field">
+        <label for="resume">Upload résumé (PDF)</label>
+        <input id="resume" name="resume" type="file" accept=".pdf,.doc,.docx" />
+        <p class="hint">Max 5 MB · PDF, DOC, or DOCX</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" id="back-2" type="button">← Back</button>
+        <button class="btn-primary"   id="next-2" type="button">Next: Role →</button>
+      </div>
+    </div>
+
+    <!-- ── PAGE 3: Role preferences ── -->
+    <div class="page" id="page-3">
+      <h2>Role preferences</h2>
+      <p class="subtitle">Step 3 of 3 — tell us what you're looking for.</p>
+
+      <div class="field">
+        <label for="role">Preferred role <span class="req">*</span></label>
+        <select id="role" name="role">
+          <option value="">Select a role…</option>
+          <option value="swe">Software Engineering</option>
+          <option value="ds">Data Science / ML</option>
+          <option value="design">Product Design</option>
+          <option value="pm">Product Management</option>
+          <option value="marketing">Marketing</option>
+          <option value="ops">Operations</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Internship duration</label>
+        <div class="check-group">
+          <label class="check-row">
+            <input type="radio" name="duration" value="2m" /> 2 months
+          </label>
+          <label class="check-row">
+            <input type="radio" name="duration" value="3m" checked /> 3 months
+          </label>
+          <label class="check-row">
+            <input type="radio" name="duration" value="6m" /> 6 months
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Work mode</label>
+        <div class="check-group">
+          <label class="check-row">
+            <input type="checkbox" id="remote"  name="mode" value="remote" checked /> Remote
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="hybrid"  name="mode" value="hybrid"  />  Hybrid
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="onsite"  name="mode" value="onsite"  />  On-site
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="start-date">Earliest start date</label>
+        <input id="start-date" name="startDate" type="text" placeholder="e.g. June 2025" />
+      </div>
+
+      <div class="field">
+        <label for="cover">Cover letter / motivation (optional)</label>
+        <textarea id="cover" name="cover" placeholder="Tell us why you want this internship…"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="referral">Referral code (if any)</label>
+        <input id="referral" name="referral" type="text" placeholder="REF-XXXX" />
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" id="back-3"   type="button">← Back</button>
+        <button class="btn-primary"   id="review-btn" type="button">Review →</button>
+      </div>
+    </div>
+
+    <!-- ── PAGE 4: Review ── -->
+    <div class="page" id="page-4">
+      <h2>Review your application</h2>
+      <p class="subtitle">Check everything before submitting.</p>
+
+      <table class="summary-table" id="review-table">
+        <!-- filled by JS -->
+      </table>
+
+      <div class="btn-row">
+        <button class="btn-secondary" id="back-4"  type="button">← Edit</button>
+        <button class="btn-submit"    id="submit-btn" type="button">Submit application</button>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- ── SUCCESS ── -->
+  <div id="success" class="card">
+    <div class="checkmark">✅</div>
+    <h2>Application submitted!</h2>
+    <p>This is a practice page — nothing was sent anywhere. Well done on completing the errand.</p>
+    <button class="btn-reset" id="reset-btn" type="button">Start over</button>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  /* ── helpers ── */
+  const $ = (id) => document.getElementById(id);
+
+  function goTo(n) {
+    document.querySelectorAll('.page').forEach((p, i) => {
+      p.classList.toggle('active', i === n - 1);
+    });
+    // step dots
+    document.querySelectorAll('.step').forEach((s, i) => {
+      s.classList.remove('active', 'done');
+      if (i + 1 === n)  s.classList.add('active');
+      if (i + 1 < n)    s.classList.add('done');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── navigation ── */
+  $('next-1').addEventListener('click', () => goTo(2));
+  $('back-2').addEventListener('click', () => goTo(1));
+  $('next-2').addEventListener('click', () => goTo(3));
+  $('back-3').addEventListener('click', () => goTo(2));
+  $('back-4').addEventListener('click', () => goTo(3));
+
+  $('review-btn').addEventListener('click', () => {
+    buildReview();
+    goTo(4);
+  });
+
+  $('submit-btn').addEventListener('click', () => {
+    document.querySelector('.card').style.display = 'none';
+    document.querySelector('.steps').style.display = 'none';
+    $('success').style.display = 'block';
+  });
+
+  $('reset-btn').addEventListener('click', () => {
+    document.querySelectorAll('input[type=text], input[type=email], input[type=tel], input[type=url], input[type=number], textarea')
+      .forEach((el) => (el.value = ''));
+    document.querySelectorAll('select').forEach((el) => (el.selectedIndex = 0));
+    document.querySelectorAll('input[type=checkbox]').forEach((el) => (el.checked = el.defaultChecked));
+    document.querySelectorAll('input[type=radio]').forEach((el)   => (el.checked = el.defaultChecked));
+    document.querySelector('.card').style.display = '';
+    document.querySelector('.steps').style.display = '';
+    $('success').style.display = 'none';
+    goTo(1);
+  });
+
+  /* ── review table ── */
+  function val(id) {
+    const el = $(id);
+    return el ? el.value.trim() || '—' : '—';
+  }
+  function selectedCheckboxes(name) {
+    const checked = [...document.querySelectorAll(`input[name="${name}"]:checked`)];
+    return checked.map((c) => c.value).join(', ') || '—';
+  }
+  function selectedRadio(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : '—';
+  }
+
+  function buildReview() {
+    const rows = [
+      ['First name',     val('first-name')],
+      ['Last name',      val('last-name')],
+      ['Email',          val('email')],
+      ['Phone',          val('phone')],
+      ['LinkedIn',       val('linkedin')],
+      ['City',           val('city')],
+      ['College',        val('college')],
+      ['Degree',         val('degree')],
+      ['Grad year',      val('grad-year')],
+      ['CGPA / %',       val('gpa')],
+      ['Preferred role', val('role')],
+      ['Duration',       selectedRadio('duration')],
+      ['Work mode',      selectedCheckboxes('mode')],
+      ['Start date',     val('start-date')],
+      ['Cover letter',   val('cover') === '—' ? '(none)' : '✓ written'],
+      ['Referral code',  val('referral')],
+    ];
+    const tbody = rows.map(([k, v]) =>
+      `<tr><th>${k}</th><td>${v}</td></tr>`
+    ).join('');
+    $('review-table').innerHTML = `<tbody>${tbody}</tbody>`;
+  }
+</script>
+</body>
+</html>

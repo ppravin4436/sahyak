@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahayak Practice — TechBridge Shop</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #0f766e;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    header h1 { margin: 0; font-size: 18px; font-weight: 700; }
+    header p  { margin: 0; font-size: 12px; opacity: .75; }
+    .cart-btn {
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.4);
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .cart-btn:hover { background: rgba(255,255,255,.28); }
+
+    /* ── Practice banner ── */
+    .practice-banner {
+      background: #fffbeb;
+      border-bottom: 1px solid #fde68a;
+      padding: 9px 24px;
+      font-size: 12px;
+      color: #92400e;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 20px;
+      max-width: 1020px;
+      margin: 24px auto;
+      padding: 0 16px 48px;
+    }
+    @media (max-width: 640px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Sidebar filters ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+    .filter-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .filter-card h3 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #374151;
+    }
+
+    .filter-card label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      padding: 4px 0;
+      cursor: pointer;
+    }
+    .filter-card input[type="checkbox"],
+    .filter-card input[type="radio"] { width: 15px; height: 15px; accent-color: #0f766e; }
+
+    select.filter-select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 13px;
+      background: #fff;
+      cursor: pointer;
+    }
+    select.filter-select:focus { outline: none; border-color: #0f766e; }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #0f766e;
+      margin: 4px 0 2px;
+    }
+    .range-labels { display: flex; justify-content: space-between; font-size: 11px; color: #6b7280; }
+
+    .btn-apply {
+      width: 100%;
+      padding: 9px;
+      background: #0f766e;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .btn-apply:hover { background: #115e59; }
+
+    .btn-clear {
+      width: 100%;
+      padding: 8px;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    /* ── Main area ── */
+    .main { display: flex; flex-direction: column; gap: 16px; }
+
+    /* Search bar */
+    .search-bar {
+      display: flex;
+      gap: 10px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    .search-bar input:focus { border-color: #0f766e; box-shadow: 0 0 0 3px rgba(15,118,110,.1); }
+    .btn-search {
+      padding: 10px 20px;
+      background: #0f766e;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-search:hover { background: #115e59; }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #results-count { font-size: 13px; color: #6b7280; }
+    .sort-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .sort-row label { color: #374151; font-weight: 600; white-space: nowrap; }
+    .sort-row select {
+      padding: 6px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    /* Product grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .product-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .15s;
+    }
+    .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.09); }
+
+    .product-img {
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      background: #f9fafb;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .product-body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .product-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .product-category {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .product-rating { font-size: 12px; color: #d97706; }
+    .product-price { font-size: 16px; font-weight: 700; color: #0f766e; margin-top: auto; }
+
+    .product-footer {
+      padding: 10px 12px 12px;
+      display: flex;
+      gap: 8px;
+    }
+    .btn-cart {
+      flex: 1;
+      padding: 8px;
+      background: #0f766e;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-cart:hover { background: #115e59; }
+    .btn-wishlist {
+      padding: 8px 10px;
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Empty state */
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 20px;
+      color: #6b7280;
+    }
+    .empty .emoji { font-size: 40px; display: block; margin-bottom: 8px; }
+
+    /* Cart panel */
+    #cart-panel {
+      display: none;
+      position: fixed;
+      top: 0; right: 0;
+      width: 320px;
+      height: 100vh;
+      background: #fff;
+      border-left: 1px solid #e5e7eb;
+      box-shadow: -4px 0 16px rgba(0,0,0,.08);
+      z-index: 999;
+      flex-direction: column;
+    }
+    #cart-panel.open { display: flex; }
+    .cart-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-header h2 { margin: 0; font-size: 16px; }
+    .cart-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #6b7280; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .cart-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .cart-item-emoji { font-size: 28px; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name  { font-size: 13px; font-weight: 600; }
+    .cart-item-price { font-size: 13px; color: #0f766e; font-weight: 700; }
+    .cart-empty-msg  { text-align: center; color: #9ca3af; font-size: 13px; padding: 24px 0; }
+    .cart-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+    .cart-total { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+    .btn-checkout {
+      width: 100%;
+      padding: 11px;
+      background: #059669;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-checkout:hover { background: #047857; }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1f2937;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: transform .25s, opacity .25s;
+      pointer-events: none;
+      z-index: 1000;
+      white-space: nowrap;
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Order success */
+    #order-success {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    #order-success .big { font-size: 56px; margin-bottom: 8px; }
+    #order-success h2   { margin: 0 0 8px; color: #065f46; }
+    #order-success p    { color: #374151; font-size: 14px; margin: 0 0 20px; }
+    .btn-start-over {
+      background: #0f766e;
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🛒 TechBridge Shop</h1>
+    <p>Sahayak Practice Page · Errand 2 · Search &amp; filter</p>
+  </div>
+  <button class="cart-btn" id="open-cart">🛒 Cart (<span id="cart-count">0</span>)</button>
+</header>
+
+<div class="practice-banner">
+  🤖 <strong>Sahayak practice page.</strong> Open the side panel, go to the Agent tab, type a goal like
+  <em>"Search for headphones, filter by Electronics, sort by price low to high, and add the first result to cart"</em>,
+  then approve each step.
+</div>
+
+<div class="layout" id="main-layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+
+    <div class="filter-card">
+      <h3>Category</h3>
+      <label><input type="checkbox" name="cat" value="electronics" id="cat-electronics" /> Electronics</label>
+      <label><input type="checkbox" name="cat" value="books"       id="cat-books"       /> Books</label>
+      <label><input type="checkbox" name="cat" value="clothing"    id="cat-clothing"    /> Clothing</label>
+      <label><input type="checkbox" name="cat" value="home"        id="cat-home"        /> Home &amp; Kitchen</label>
+      <label><input type="checkbox" name="cat" value="sports"      id="cat-sports"      /> Sports</label>
+    </div>
+
+    <div class="filter-card">
+      <h3>Rating</h3>
+      <label><input type="radio" name="rating" value=""    checked /> All ratings</label>
+      <label><input type="radio" name="rating" value="4"          /> ⭐ 4+ stars</label>
+      <label><input type="radio" name="rating" value="4.5"        /> ⭐ 4.5+ stars</label>
+    </div>
+
+    <div class="filter-card">
+      <h3>Max price (₹)</h3>
+      <input type="range" id="price-range" min="100" max="5000" step="100" value="5000" />
+      <div class="range-labels">
+        <span>₹100</span>
+        <span id="price-label">₹5000</span>
+      </div>
+    </div>
+
+    <div class="filter-card">
+      <h3>Availability</h3>
+      <label><input type="checkbox" id="in-stock" name="inStock" /> In stock only</label>
+    </div>
+
+    <button class="btn-apply" id="btn-apply-filters">Apply filters</button>
+    <button class="btn-clear" id="btn-clear-filters">Clear all filters</button>
+
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="main">
+
+    <div class="search-bar">
+      <input id="search-input" type="text" placeholder="Search products…" autocomplete="off" />
+      <button class="btn-search" id="btn-search">Search</button>
+    </div>
+
+    <div class="toolbar">
+      <span id="results-count">Showing 12 products</span>
+      <div class="sort-row">
+        <label for="sort-select">Sort by</label>
+        <select id="sort-select">
+          <option value="default">Relevance</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top rated</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" id="product-grid">
+      <!-- filled by JS -->
+    </div>
+
+  </div>
+</div>
+
+<!-- Order success overlay -->
+<div id="order-success" class="layout" style="max-width:480px">
+  <div class="big">🎉</div>
+  <h2>Order placed!</h2>
+  <p>This is a practice page — no real order was made. Well done on completing the errand.</p>
+  <button class="btn-start-over" id="btn-start-over">Back to shop</button>
+</div>
+
+<!-- Cart panel -->
+<div id="cart-panel">
+  <div class="cart-header">
+    <h2>Your cart</h2>
+    <button class="cart-close" id="close-cart" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <p class="cart-empty-msg" id="cart-empty">Your cart is empty.</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total" id="cart-total">Total: ₹0</div>
+    <button class="btn-checkout" id="btn-checkout">Proceed to checkout</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<script>
+  /* ── Product catalogue ── */
+  const PRODUCTS = [
+    { id:1,  name:"Wireless Noise-Cancelling Headphones", category:"electronics", price:2499, rating:4.6, stock:true,  emoji:"🎧" },
+    { id:2,  name:"Mechanical Keyboard (TKL)",            category:"electronics", price:1899, rating:4.4, stock:true,  emoji:"⌨️" },
+    { id:3,  name:"USB-C Hub 7-in-1",                    category:"electronics", price:999,  rating:4.3, stock:true,  emoji:"🔌" },
+    { id:4,  name:"Ergonomic Mouse",                     category:"electronics", price:799,  rating:4.5, stock:true,  emoji:"🖱️" },
+    { id:5,  name:"Portable Bluetooth Speaker",          category:"electronics", price:1299, rating:4.2, stock:false, emoji:"🔊" },
+    { id:6,  name:"Webcam 1080p HD",                     category:"electronics", price:1499, rating:4.1, stock:true,  emoji:"📷" },
+    { id:7,  name:"Clean Code (Book)",                   category:"books",       price:499,  rating:4.8, stock:true,  emoji:"📗" },
+    { id:8,  name:"The Pragmatic Programmer",            category:"books",       price:549,  rating:4.7, stock:true,  emoji:"📘" },
+    { id:9,  name:"Atomic Habits",                       category:"books",       price:399,  rating:4.9, stock:true,  emoji:"📙" },
+    { id:10, name:"Deep Work",                           category:"books",       price:349,  rating:4.6, stock:false, emoji:"📕" },
+    { id:11, name:"Developer Hoodie (Navy)",             category:"clothing",    price:899,  rating:4.3, stock:true,  emoji:"👕" },
+    { id:12, name:"Laptop Sleeve 14\"",                  category:"clothing",    price:449,  rating:4.1, stock:true,  emoji:"🎒" },
+    { id:13, name:"Desk Organiser Set",                  category:"home",        price:699,  rating:4.0, stock:true,  emoji:"🗂️" },
+    { id:14, name:"LED Desk Lamp with USB",              category:"home",        price:799,  rating:4.4, stock:true,  emoji:"💡" },
+    { id:15, name:"Yoga Mat (Non-slip)",                 category:"sports",      price:599,  rating:4.2, stock:true,  emoji:"🧘" },
+    { id:16, name:"Resistance Bands Set",                category:"sports",      price:349,  rating:4.5, stock:true,  emoji:"💪" },
+  ];
+
+  /* ── State ── */
+  let cart = [];
+  let filtered = [...PRODUCTS];
+
+  /* ── Helpers ── */
+  const $ = (id) => document.getElementById(id);
+
+  function showToast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function stars(r) {
+    const full = Math.floor(r);
+    const half = r - full >= 0.5 ? '½' : '';
+    return '★'.repeat(full) + half + ` (${r})`;
+  }
+
+  /* ── Render products ── */
+  function renderGrid(products) {
+    const grid = $('product-grid');
+    $('results-count').textContent = `Showing ${products.length} product${products.length === 1 ? '' : 's'}`;
+
+    if (!products.length) {
+      grid.innerHTML = '<div class="empty"><span class="emoji">🔍</span>No products match your filters.</div>';
+      return;
+    }
+
+    grid.innerHTML = products.map((p) => `
+      <div class="product-card" data-id="${p.id}">
+        <div class="product-img">${p.emoji}</div>
+        <div class="product-body">
+          <div class="product-category">${p.category}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-rating">${stars(p.rating)}</div>
+          <div class="product-price">₹${p.price.toLocaleString('en-IN')}</div>
+        </div>
+        <div class="product-footer">
+          <button class="btn-cart" data-id="${p.id}" ${p.stock ? '' : 'disabled title="Out of stock"'}>
+            ${p.stock ? 'Add to cart' : 'Out of stock'}
+          </button>
+          <button class="btn-wishlist" title="Save for later">♡</button>
+        </div>
+      </div>
+    `).join('');
+
+    // Wire add-to-cart buttons
+    grid.querySelectorAll('.btn-cart:not([disabled])').forEach((btn) => {
+      btn.addEventListener('click', () => addToCart(Number(btn.dataset.id)));
+    });
+  }
+
+  /* ── Filtering & sorting ── */
+  function applyFiltersAndSort() {
+    const query   = $('search-input').value.trim().toLowerCase();
+    const cats    = [...document.querySelectorAll('input[name="cat"]:checked')].map((c) => c.value);
+    const minRating = parseFloat(document.querySelector('input[name="rating"]:checked')?.value || '0') || 0;
+    const maxPrice  = parseInt($('price-range').value, 10);
+    const inStock   = $('in-stock').checked;
+    const sort      = $('sort-select').value;
+
+    filtered = PRODUCTS.filter((p) => {
+      if (query && !p.name.toLowerCase().includes(query) && !p.category.includes(query)) return false;
+      if (cats.length && !cats.includes(p.category)) return false;
+      if (p.rating < minRating) return false;
+      if (p.price > maxPrice)  return false;
+      if (inStock && !p.stock) return false;
+      return true;
+    });
+
+    if (sort === 'price-asc')  filtered.sort((a, b) => a.price - b.price);
+    if (sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+    if (sort === 'rating')     filtered.sort((a, b) => b.rating - a.rating);
+    if (sort === 'name')       filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+    renderGrid(filtered);
+  }
+
+  /* ── Cart ── */
+  function addToCart(id) {
+    const product = PRODUCTS.find((p) => p.id === id);
+    if (!product) return;
+    cart.push(product);
+    updateCartUI();
+    showToast(`"${product.name}" added to cart`);
+  }
+
+  function updateCartUI() {
+    $('cart-count').textContent = cart.length;
+    const itemsEl = $('cart-items');
+    const emptyEl = $('cart-empty');
+
+    if (!cart.length) {
+      emptyEl.style.display = '';
+      itemsEl.querySelectorAll('.cart-item').forEach((el) => el.remove());
+      $('cart-total').textContent = 'Total: ₹0';
+      return;
+    }
+
+    emptyEl.style.display = 'none';
+    itemsEl.querySelectorAll('.cart-item').forEach((el) => el.remove());
+    cart.forEach((p) => {
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <span class="cart-item-emoji">${p.emoji}</span>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">₹${p.price.toLocaleString('en-IN')}</div>
+        </div>`;
+      itemsEl.appendChild(div);
+    });
+
+    const total = cart.reduce((s, p) => s + p.price, 0);
+    $('cart-total').textContent = `Total: ₹${total.toLocaleString('en-IN')}`;
+  }
+
+  /* ── Event listeners ── */
+  $('btn-search').addEventListener('click', applyFiltersAndSort);
+  $('search-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') applyFiltersAndSort();
+  });
+
+  $('btn-apply-filters').addEventListener('click', applyFiltersAndSort);
+
+  $('btn-clear-filters').addEventListener('click', () => {
+    $('search-input').value = '';
+    document.querySelectorAll('input[name="cat"]').forEach((c) => (c.checked = false));
+    document.querySelector('input[name="rating"][value=""]').checked = true;
+    $('price-range').value = 5000;
+    $('price-label').textContent = '₹5000';
+    $('in-stock').checked = false;
+    $('sort-select').value = 'default';
+    applyFiltersAndSort();
+  });
+
+  $('sort-select').addEventListener('change', applyFiltersAndSort);
+
+  $('price-range').addEventListener('input', () => {
+    $('price-label').textContent = `₹${$('price-range').value}`;
+  });
+
+  $('open-cart').addEventListener('click', () => $('cart-panel').classList.add('open'));
+  $('close-cart').addEventListener('click', () => $('cart-panel').classList.remove('open'));
+
+  $('btn-checkout').addEventListener('click', () => {
+    if (!cart.length) { showToast('Your cart is empty'); return; }
+    $('cart-panel').classList.remove('open');
+    $('main-layout').style.display    = 'none';
+    $('order-success').style.display  = 'grid';
+  });
+
+  $('btn-start-over').addEventListener('click', () => {
+    cart = [];
+    updateCartUI();
+    $('main-layout').style.display   = '';
+    $('order-success').style.display = 'none';
+    applyFiltersAndSort();
+  });
+
+  /* ── Init ── */
+  applyFiltersAndSort();
+</script>
+</body>
+</html>
